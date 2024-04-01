@@ -90,9 +90,8 @@
     
 
   ];
-
-  searchInput.addEventListener("input", function() {
-    var searchText = this.value.toLowerCase();
+function populateSearchResults() {
+    var searchText = searchInput.value.toLowerCase();
     searchResults.innerHTML = ""; // Clear previous search results
 
     // Filter search results based on input text
@@ -102,29 +101,30 @@
 
     // Display filtered search results
     filteredResults.forEach(function(result) {
-      var resultLabel = document.createElement("label");
       var resultLink = document.createElement("a");
+      var deleteButton = document.createElement("span");
 
       resultLink.textContent = result.name;
-      resultLink.href = "#";
+      resultLink.href = result.audioUrl;
       resultLink.classList.add("search-result");
       resultLink.addEventListener("click", function(event) {
         event.preventDefault(); // Prevent the default action of the link
         playAudio(result.audioUrl);
-        titleInfo.textContent = result.name; // Update footer title with the selected result name
       });
 
-      resultLabel.appendChild(resultLink);
-
-     // Add click event listener to remove search result
-      resultLabel.addEventListener("click", function() {
-        this.remove();
+      deleteButton.textContent = "";
+      deleteButton.classList.add("delete-button");
+      deleteButton.addEventListener("click", function(event) {
+        event.stopPropagation(); // Prevent the click event from bubbling up to the result link
+        deleteResult(this.parentNode);
       });
 
-      searchResults.appendChild(resultLabel);
-    }); 
+      resultLink.appendChild(deleteButton);
+      searchResults.appendChild(resultLink);
+    });
 
-  });
+    checkSearchResults();
+  }
 
   // Function to play audio
   function playAudio(audioUrl) {
@@ -144,26 +144,39 @@
     }
   });
 
+  // Function to delete search result
+  function deleteResult(resultNode) {
+    resultNode.remove();
+    checkSearchResults();
+  }
+
+  // Function to remove all search results
+  function removeAllResults() {
+    searchResults.innerHTML = "";
+    checkSearchResults();
+  }
+
   // Function to check if there are search results
   function checkSearchResults() {
     if (searchResults.children.length > 0) {
-      footerBar.style.display = "block";
+      footerBar.style.display = "block"; // Show footer bar if there are search results
     } else {
-      footerBar.style.display = "none";
+      footerBar.style.display = "none"; // Hide footer bar if there are no search results
     }
   }
-  // Function to check if there are search results
-  function checkSearchResults() {
-    if (searchResults.children.length === 0) {
-      window.location.reload(); // Reload the page when there are no search results
-    }
-  }
-   // Function to reload the page when the search bar is empty
-   searchInput.addEventListener("input", function() {
-    if (this.value.trim() === "") {
-      location.reload("");
-    }
-  });
+
+  // Reload page when search bar is empty
+  searchInput.addEventListener("input", function() {
+   
+      populateSearchResults();
+    });
+  
+
+  // Populate search results on page load
+  window.onload = populateSearchResults;
+ 
+
+   
 </script>
 </body>
 </html>
