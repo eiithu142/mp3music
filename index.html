@@ -158,6 +158,12 @@
       window.location.reload(); // Reload the page when there are no search results
     }
   }
+   // Function to reload the page when the search bar is empty
+   searchInput.addEventListener("input", function() {
+    if (this.value.trim() === "") {
+      location.reload("");
+    }
+  });
 </script>
 </body>
 </html>
