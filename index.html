@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search Bar with Playable Results and Deletable Search Results</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  #search-container {
+    margin: 20px auto;
+    width: 50%;
+    margin-left: 20px;
+  }
+  #search-bar {
+    
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  #search-results {
+    margin-top: 20px;
+    text-align: left;
+  }
+  .search-result {
+    margin-bottom: 5px;
+    cursor: pointer;
+    color:black;
+    text-decoration: none;
+    display: block;
+  }
+  #footer-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f0f0f0;
+    padding: 10px;
+    display: none;
+  }
+  #title-info {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+  button{
+    border-radius: 20px;
+    background-color: aquamarine;
+  }
+</style>
+<h1>Mp3 Music</h1>
+</head>
+<body>
+<div id="search-container">
+  <input type="text" id="search-bar" placeholder="Search...">
+  <div id="search-results"></div>
+</div>
+<hr>
+<div id="footer-bar">
+  <div id="title-info"></div>
+  <button id="play-pause-button"><audio id="audio" controls>
+    <source src="" type="audio/mpeg">
+  </audio></button>
+</div>
+<script>
+  var searchInput = document.getElementById("search-bar");
+  var searchResults = document.getElementById("search-results");
+  var audio = document.getElementById("audio");
+  var playPauseButton = document.getElementById("play-pause-button");
+  var footerBar = document.getElementById("footer-bar");
+  var titleInfo = document.getElementById("title-info");
+
+  // Sample data representing search results with corresponding audio URLs
+  var searchData = [
+    { name: "ဆုထက်လှိုင် - စဥ်းစားဦးမယ်", audioUrl: "ဆုထက်လှိုင် - စဥ်းစားဦးမယ် (Official MV).mp4" },
+    { name: "Manaaw (မ_ေနာ - မိ_ေခ်ာ)", audioUrl: "Manaaw (မ_ေနာ - မိ_ေခ်ာ).mp4" },
+    { name: "(ဖိုးကာ - နွေဦးကဗျာ)", audioUrl: "(ဖိုးကာ - နွေဦးကဗျာ.mp4" },
+    { name: "မမကိုယ်တိုင်က - ဂရေဟမ်", audioUrl: "မမကိုယ်တိုင်က - ဂရေဟမ်.mp4" },
+    { name: "မန်းတောင်ရိပ်ခို", audioUrl: "မန်းတောင်ရိပ်ခို.mp4" },
+    { name: "Okay…Narr Larr", audioUrl: "အုိေက…နားလား-Okay…Narr Larr.mp4" },
+    { name: "ရေတွေစိုကုန်ပြီ ဇော်ပိုင်၊သင်ဇာဝင့်ကျော်", audioUrl: "ရတနာမြိုင်သင်္ကြန် _ ရေတွေစိုကုန်ပြီ - ဇော်ပိုင်၊သင်ဇာဝင့်ကျော် _ Yay Tway Soe Kone P (Official MV).mp4" },
+    { name: "ဖြူနီပြာဝါ -R ဇာနည်", audioUrl: "ဖြူနီပြာဝါ -R ဇာနည် I Phyu Nee Pyar War - Rzarni (Official Video).mp4" },
+    { name: "ပိတောက်တစ်မျက်နှာ R ဇာနည်", audioUrl: "ပိတောက်တစ်မျက်နှာ    R ဇာနည်.mp4" },
+    { name: "ချမ်းလွန်းလို့တုန် - နီနီခင်ဇော် _", audioUrl: "C:\Users\ComDee\Desktop\april\ချမ်းလွန်းလို့တုန် - နီနီခင်ဇော် _ Chan Loon Lo Tone - Ni Ni Khin Zaw (Dance Performance Video).mp4s" },
+    { name: "", audioUrl: "" },
+    
+
+  ];
+
+  searchInput.addEventListener("input", function() {
+    var searchText = this.value.toLowerCase();
+    searchResults.innerHTML = ""; // Clear previous search results
+
+    // Filter search results based on input text
+    var filteredResults = searchData.filter(function(item) {
+      return item.name.toLowerCase().includes(searchText);
+    });
+
+    // Display filtered search results
+    filteredResults.forEach(function(result) {
+      var resultLabel = document.createElement("label");
+      var resultLink = document.createElement("a");
+
+      resultLink.textContent = result.name;
+      resultLink.href = "#";
+      resultLink.classList.add("search-result");
+      resultLink.addEventListener("click", function(event) {
+        event.preventDefault(); // Prevent the default action of the link
+        playAudio(result.audioUrl);
+        titleInfo.textContent = result.name; // Update footer title with the selected result name
+      });
+
+      resultLabel.appendChild(resultLink);
+
+     // Add click event listener to remove search result
+      resultLabel.addEventListener("click", function() {
+        this.remove();
+      });
+
+      searchResults.appendChild(resultLabel);
+    }); 
+
+  });
+
+  // Function to play audio
+  function playAudio(audioUrl) {
+    audio.src = audioUrl;
+    audio.play();
+    footerBar.style.display = "block";
+  }
+
+  // Function to toggle play/pause
+  playPauseButton.addEventListener("click", function() {
+    if (audio.paused) {
+      audio.play();
+      playPauseButton.textContent = "Pause";
+    } else {
+      audio.pause();
+      playPauseButton.textContent = "Play";
+    }
+  });
+
+  // Function to check if there are search results
+  function checkSearchResults() {
+    if (searchResults.children.length > 0) {
+      footerBar.style.display = "block";
+    } else {
+      footerBar.style.display = "none";
+    }
+  }
+  // Function to check if there are search results
+  function checkSearchResults() {
+    if (searchResults.children.length === 0) {
+      window.location.reload(); // Reload the page when there are no search results
+    }
+  }
+</script>
+</body>
+</html>
