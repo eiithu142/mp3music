@@ -8,6 +8,18 @@
   body {
     font-family: Arial, sans-serif;
     text-align: center;
+     font-family: Arial, sans-serif;
+    transition: background-color 0.5s ease;
+    transition: color 0.5s ease;
+  }
+   .day {
+    
+     /* Sky Blue */
+    color: #000;
+  }
+  .night {
+    background-color: #000; /* Black */
+    color: #fff;
   }
   #search-container {
     margin: 20px auto;
@@ -49,10 +61,18 @@
     margin-bottom: 5px;
   }
   button{
+    margin-top: 30px;
+    margin-right: 90%;
     border-radius: 20px;
-    background-color: aquamarine;
+    
+  }
+  h1{
+    margin-top: -30px;
   }
 </style>
+  <div class="day">
+<h1 id="greeting"></h1>
+<button onclick="toggleMood()"><i class="bi bi-brightness-low-fill"></i></button></div>
 <h1>Mp3 Music</h1>
 </head>
 <body>
@@ -68,6 +88,20 @@
   </audio></button>
 </div>
 <script>
+  function toggleMood() {
+  const body = document.body;
+  const greeting = document.getElementById("greeting");
+
+  if (body.classList.contains("day")) {
+    body.classList.remove("day");
+    body.classList.add("night");
+    greeting.textContent = "";
+  } else {
+    body.classList.remove("night");
+    body.classList.add("day");
+    greeting.textContent = "";
+  }
+}
   var searchInput = document.getElementById("search-bar");
   var searchResults = document.getElementById("search-results");
   var audio = document.getElementById("audio");
